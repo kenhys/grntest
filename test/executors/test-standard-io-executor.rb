@@ -58,5 +58,17 @@ class TestStandardIOExecutor < Test::Unit::TestCase
       execute("\#@on-error omit")
       assert_equal(:omit, @context.on_error)
     end
+
+    def test_when_enabled
+      ENV["ENABLED"] = "yes"
+      execute("\#@when #{ENV['ENABLED']}")
+      assert_not_predicate(@context, :omitted?)
+    end
+
+    def test_when_disabled
+      ENV["ENABLED"] = "no"
+      execute("\#@when #{ENV['ENABLED']}")
+      assert_predicate(@context, :omitted?)
+    end
   end
 end

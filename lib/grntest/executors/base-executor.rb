@@ -314,6 +314,16 @@ module Grntest
         end
       end
 
+      def execute_directive_when(line, content, options)
+        expression, _ = options
+        case expression
+        when "yes", "true"
+        else
+          p line
+          omit("hoge fuga")
+        end
+      end
+
       def execute_directive(parser, line, content)
         command, *options = Shellwords.split(content)
         case command
@@ -347,6 +357,8 @@ module Grntest
           execute_directive_collect_query_log(line, content, options)
         when "generate-series"
           execute_directive_generate_series(parser, line, content, options)
+        when "when"
+          execute_directive_when(line, content, options)
         else
           log_input(line)
           log_error("#|e| unknown directive: <#{command}>")
